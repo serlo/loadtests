@@ -1,23 +1,34 @@
-#TEMP FILE!!!
+#Loadtests for serlo.org
 
-based on https://k6.io/
-and
-https://docs.k6.io/docs/influxdb-grafana
+All loadtests for serlo.org are based on K6 (https://k6.io/), Grafana (https://grafana.com/) and InfluxDB (https://www.influxdata.com/).
+
+The project initially followed the tutorial at https://docs.k6.io/docs/influxdb-grafana.
 
 
-#how to run locally
-git clone TODO
-cd TODO
+##Quickstart for developing loadtests (using the example of athene2)
+```
+# 1 clone loaddtest project
+git clone https://github.com/serlo/loadtests.git
+
+# 2 change into project directory 
+cd loadtests
+
+# 3 run Grafana, InfluxDB and K6 via docker compose
 docker-compose up -d
-docker-compose run -v $PWD/scripts:/scripts k6 run /scripts/athene2-default.js
 
-Import Dashboard:
-https://grafana.com/dashboards/2587 
+# 4 run athene2 loadtest 
+docker-compose run -v $PWD/scripts:/scripts k6 run /scripts/athene2.js
 
-Access Grafana
+# 5 access grafana at localhost
 http://localhost:3000
 
-#run in gcp
+# 6 import dashboard from file /dashboard/k6_load_testing_results.json
+```
+
+
+
+##Quickstart for running loadtests in Google Cloud Platform (using the example of athene2)
+TODO
 startup VM in same zone!
 install docker
 sudo apt-get update
