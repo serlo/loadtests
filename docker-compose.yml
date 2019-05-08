@@ -17,7 +17,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_BASIC_ENABLED=false
     ports:
-      - "3000:3000"
+      - "80:3000"
 
   k6:
     image: loadimpact/k6
