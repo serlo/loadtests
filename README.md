@@ -7,7 +7,7 @@ The project initially followed the tutorial at https://docs.k6.io/docs/influxdb-
 
 ## Quickstart for developing loadtests (using the example of athene2)
 ```
-# 1 Clone loaddtest project
+# 1 Clone loadtest project
 git clone https://github.com/serlo/loadtests.git
 
 # 2 Change into project directory 
@@ -42,7 +42,7 @@ docker run docker/compose:1.24.0 version
 echo alias docker-compose="'"'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD:$PWD" -w="$PWD" docker/compose:1.24.0'"'" >> ~/.bashrc
 source ~/.bashrc
 
-# 4 Clone loaddtest project
+# 4 Clone loadtest project
 git clone https://github.com/serlo/loadtests.git
 
 # 5 Change into project directory 
