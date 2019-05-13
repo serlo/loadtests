@@ -2,10 +2,10 @@ import http from "k6/http";
 import {check, sleep} from "k6";
 
 const vus = 250;
-const max_response_time_ms = 670;
-const domain = "https://de.staging.serlo.org/";
 const average_sessions_duration_s = 150;
+const max_response_time_ms = 670;
 const test_duration_s = "300s";
+const domain = "https://de.staging.serlo.org/";
 
 export let options = {
     vus: vus,
