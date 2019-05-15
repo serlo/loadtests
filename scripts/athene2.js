@@ -19,21 +19,12 @@ export let options = {
 };
 
 export default function () {
-    let sleep_first= Math.floor(Math.random() * (average_sessions_duration_s ))
-    let sleep_second = average_sessions_duration_s - sleep_first;
-    sleep(sleep_first);
-    let res = http.get( domain + ids[Math.floor(Math.random() * (ids.length))]);
+    sleep(Math.floor(Math.random() * (average_sessions_duration_s)));
+    let res = http.get(domain + ids[Math.floor(Math.random() * (ids.length))]);
     check(res, {
         "status was 200": (r) => r.status == 200,
         "transaction time OK": (r) => r.timings.duration < max_response_time_ms
     });
-    sleep(sleep_second);
-    res = http.get(domain + ids[Math.floor(Math.random() * (ids.length))]);
-    check(res, {
-        "status was 200": (r) => r.status == 200,
-        "transaction time OK": (r) => r.timings.duration < max_response_time_ms
-    });
-
 };
 
 // all ids of articles (3) and course-pages (8)
