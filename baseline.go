@@ -1,3 +1,9 @@
+/*
+  just run with "go run baseline.go >baseline.run"
+
+  will log each page id and response time for loading the html page.
+*/
+
 package main
 
 import (
