@@ -1,6 +1,22 @@
 import http from "k6/http";
 import {check, sleep} from "k6";
 
+/*
+This loadtest is based on measured values of the current production system.
+
+Average session duration in seconds         150 (2:30 min), peak: 200 (3:26 min)
+Hourly sessions (peak)                      6100
+Average server response time in seconds     0.67
+Pages per session                           1.7
+
+Seen realtime values in Google Analytics:
+400 users online: 6   pages/seconds
+77  users online: 1-2 pages/seconds
+
+
+VU Calculation based on:
+Virtual Users = (Hourly Sessions x Average Session Duration in seconds) / 3,600
+ */
 const vus = 250;
 const average_sessions_duration_s = 150;
 const max_response_time_ms = 670;
