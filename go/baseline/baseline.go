@@ -35,6 +35,7 @@ var password string
 var ready sync.WaitGroup
 var worker int
 var total time.Duration
+var failed int
 var min time.Duration
 var max time.Duration
 
@@ -61,14 +62,26 @@ func main() {
 		go sendRequest(i*segment, (i+1)*segment)
 	}
 	ready.Wait()
-	fmt.Printf("{ \"total\": %d \"min\": %d \"max\": %d }\n", total/time.Millisecond, min/time.Millisecond, max/time.Millisecond)
+	fmt.Printf("{ \"total\": %d, \"min\": %d, \"max\": %d, \"failed\": %d }\n", total/time.Millisecond, min/time.Millisecond, max/time.Millisecond, failed)
 }
 
 func sendRequest(startID int, stopID int) {
-	client := http.DefaultClient
-	baseURL := "http://de.production.serlo.org"
+	var redirect bool
+	var redirectCacheHit string
+	var responseCacheHit string
+
+	client := &http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			redirectCacheHit = req.Header.Get("X-Varnish-Cache")
+			redirect = true
+			return nil
+		}}
+	baseURL := "http://de.production.serlo.org/entity/view"
 
 	var segmentTotal time.Duration
+	var segmentFailed int
+	var segmentMin time.Duration
+	var segmentMax time.Duration
 
 	for i := startID; i < stopID; i++ {
 		id := pageIds[i]
@@ -78,20 +91,26 @@ func sendRequest(startID int, stopID int) {
 		startTime := time.Now()
 		resp, err := client.Do(req)
 		if err != nil {
+			segmentFailed++
 			fmt.Printf("{ \"pageId\": %d,  \"error\": \"%s\" }\n", id, err.Error())
 			continue
 		}
 		responseTime := time.Since(startTime)
-		if min > responseTime {
-			min = responseTime
+		if segmentMin > responseTime {
+			segmentMin = responseTime
 		}
-		if max < responseTime {
-			max = responseTime
+		if segmentMax < responseTime {
+			segmentMax = responseTime
 		}
 		segmentTotal = segmentTotal + responseTime
 
+		responseCacheHit = resp.Header.Get("X-Varnish-Cache")
+
+		var bytes int
 		if resp.Body != nil {
-			ioutil.ReadAll(resp.Body)
+			content, _ := ioutil.ReadAll(resp.Body)
+			bytes = len(content)
+
 			resp.Body.Close()
 		}
 
@@ -99,8 +118,15 @@ func sendRequest(startID int, stopID int) {
 			fmt.Printf("{ \"pageId\": %d, \"status\": %d }\n", id, resp.StatusCode)
 			continue
 		}
-		fmt.Printf("{ \"pageId\": %d, \"time\": %d }\n", id, responseTime/time.Millisecond)
+		fmt.Printf("{ \"pageId\": %d, \"time\": %d, \"bytes\": %d, \"redirect\": \"%t\", \"redirectCache\": \"%s\", \"responseCache\": \"%s\" }\n", id, responseTime/time.Millisecond, bytes, redirect, redirectCacheHit, responseCacheHit)
 	}
 	total += segmentTotal
+	failed += segmentFailed
+	if min > segmentMin {
+		min = segmentMin
+	}
+	if max < segmentMax {
+		max = segmentMax
+	}
 	ready.Done()
 }
