@@ -22,7 +22,7 @@ const vus = 250;
 const average_sessions_duration_s = 150;
 const max_response_time_ms = 670;
 const test_duration_s = "300s";
-const domain = "https://de.staging.serlo.org";
+const domain = "https://de.serlo-staging.dev";
 const user = 'serlo' // supply basic auth credentials here
 const pass = 'O3Y0TqEqWMggzm9Su9jte52g8AGSKY'
 
