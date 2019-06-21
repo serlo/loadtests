@@ -1,4 +1,7 @@
-# Result test 1 (2019-05-13 02:16)
+# Result test 1 (2019-05-13)
+## Purpose
+Get initial metrics.
+
 ## Scenario
 ```
 const vus = 250;
@@ -7,7 +10,7 @@ const max_response_time_ms = 670;
 const test_duration_s = "300s";
 ```
 
-TODO: Describe Script
+Script: https://github.com/serlo/loadtests/blob/b44fb97da3f1006e3f8e73af1737a2e916d2646c/scripts/athene2.js
 
 ## Changes compared to previous tests
 none
